@@ -1,5 +1,5 @@
 var profile = {
-  "name" : "Sangvaleap",
+  "name" : "malek",
   "image" : "https://avatars.githubusercontent.com/u/86506519?v=4",
   "email" : "sangvaleap.vanny@gmail.com"
 };
@@ -7,39 +7,28 @@ var profile = {
 List categories = [
   {
     "name" : "All",
-    "icon" : "assets/icons/category/all.svg"
+    "icon" : "assets/icons/categories/all.svg"
   },
   {
     "name" : "Coding",
-    "icon" : "assets/icons/category/coding.svg"
+    "icon" : "assets/icons/categories/coding.svg"
   },
   {
     "name" : "Education",
-    "icon" : "assets/icons/category/education.svg"
+    "icon" : "assets/icons/categories/education.svg"
   },
   {
     "name" : "Design",
-    "icon" : "assets/icons/category/design.svg"
+    "icon" : "assets/icons/categories/design.svg"
   },
   {
     "name" : "Business",
-    "icon" : "assets/icons/category/business.svg"
+    "icon" : "assets/icons/categories/business.svg"
   },
-  {
-    "name" : "Cooking",
-    "icon" : "assets/icons/category/cooking.svg"
-  },
-  {
-    "name" : "Music",
-    "icon" : "assets/icons/category/music.svg"
-  },
-  {
-    "name" : "Art",
-    "icon" : "assets/icons/category/art.svg"
-  },
+
   {
     "name" : "Finance",
-    "icon" : "assets/icons/category/finance.svg"
+    "icon" : "assets/icons/categories/finance.svg"
   },
 ];
 
@@ -48,7 +37,7 @@ List courses = [
     "id" : 100,
     "name" : "UI/UX Design",
     "image" : "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$110.00",
+    "price" : "\DT 110.00",
     "duration" : "10 hours",
     "session" : "6 lessons",
     "review" : "4.5",
@@ -59,7 +48,7 @@ List courses = [
     "id" : 101,
     "name" : "Programming",
     "image" : "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$155.00",
+    "price" : "\DT  155.00",
     "duration" : "20 hours",
     "session" : "12 lessons",
     "review" : "5",
@@ -81,7 +70,7 @@ List courses = [
     "id" : 103,
     "name" : "Mix Salad",
     "image" : "https://images.unsplash.com/photo-1507048331197-7d4ac70811cf?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$80.00",
+    "price" : "\dt 80.00",
     "duration" : "4 hours",
     "session" : "3 lessons",
     "review" : "4.5",
@@ -92,7 +81,7 @@ List courses = [
     "id" : 104,
     "name" : "Guitar Class",
     "image" : "https://images.unsplash.com/photo-1549298240-0d8e60513026?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$125.00",
+    "price" : "\DT125.00",
     "duration" : "12 hours",
     "session" : "4 lessons",
     "review" : "5",
@@ -150,7 +139,7 @@ List features = [
     "id" : 100,
     "name" : "UI/UX Design",
     "image" : "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$110.00",
+    "price" : "\DT110.00",
     "duration" : "10 hours",
     "session" : "6 lessons",
     "review" : "4.5",
@@ -183,7 +172,7 @@ List features = [
     "id" : 103,
     "name" : "Photography",
     "image" : "https://images.unsplash.com/photo-1472393365320-db77a5abbecc?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
-    "price" : "\$80.00",
+    "price" : "\DT80.00",
     "duration" : "4 hours",
     "session" : "3 lessons",
     "review" : "4.5",
@@ -206,7 +195,7 @@ List features = [
 List recommends = [
   {
     "id" : 105,
-    "name" : "Painting",
+    "name" : "IOT",
     "image" : "https://images.unsplash.com/photo-1596548438137-d51ea5c83ca5?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
     "price" : "\$65.00",
     "duration" : "12 hours",

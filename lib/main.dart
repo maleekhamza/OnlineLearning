@@ -1,9 +1,14 @@
 import 'package:elearning_applicaton/screens/root_app.dart';
 import 'package:elearning_applicaton/theme/color.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'Screens/loginScreen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp( );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -18,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: AppColor.primary,
       ),
-      home: const RootApp(),
+      home: const LoginScreen(),
     );
   }
 }

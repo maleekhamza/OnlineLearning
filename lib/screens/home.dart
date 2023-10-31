@@ -1,11 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:elearning_applicaton/screens/DetailsPage.dart';
 import 'package:flutter/material.dart';
-import 'package:elearning_applicaton/theme/color.dart';
-import 'package:elearning_applicaton/utils/data.dart';
-import 'package:elearning_applicaton/widgets/category_box.dart';
-import 'package:elearning_applicaton/widgets/feature_item.dart';
-import 'package:elearning_applicaton/widgets/notification_box.dart';
-import 'package:elearning_applicaton/widgets/recommend_item.dart';
+import '../theme/color.dart';
+import '../utils/data.dart';
+import '../widgets/category_box.dart';
+import '../widgets/feature_item.dart';
+import '../widgets/notification_box.dart';
+import '../widgets/recommend_item.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -156,8 +157,18 @@ class _HomePageState extends State<HomePage> {
       ),
       items: List.generate(
         features.length,
-            (index) => FeatureItem(
-          data: features[index],
+            (index) => GestureDetector(
+          onTap: () {
+            // Navigate to the details page when a featured item is tapped
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DetailsPage()
+              ),
+            );
+          },
+          child: FeatureItem(
+            data: features[index],
+          ),
         ),
       ),
     );
