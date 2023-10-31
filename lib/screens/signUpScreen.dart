@@ -6,12 +6,13 @@ import 'package:flutter/material.dart';
 // import 'model.dart';
 
 class SignUpScreen extends StatefulWidget {
+
   @override
-  _RegisterState createState() => _RegisterState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _RegisterState extends State<SignUpScreen> {
-  _RegisterState();
+class _SignUpScreenState extends State<SignUpScreen> {
+  _SignUpScreenState();
 
   bool showProgress = false;
   bool visible = false;
