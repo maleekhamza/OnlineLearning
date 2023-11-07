@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elearning_applicaton/screens/DetailsPage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../theme/color.dart';
 import '../utils/data.dart';
@@ -8,14 +10,15 @@ import '../widgets/feature_item.dart';
 import '../widgets/notification_box.dart';
 import '../widgets/recommend_item.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage1 extends StatefulWidget {
+  const HomePage1({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePage1State createState() => _HomePage1State();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePage1State extends State<HomePage1> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,6 +150,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+
   _buildFeatured() {
     return CarouselSlider(
       options: CarouselOptions(
@@ -162,7 +166,7 @@ class _HomePageState extends State<HomePage> {
             // Navigate to the details page when a featured item is tapped
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DetailsPage()
+                  builder: (context) => DetailsPage()
               ),
             );
           },
@@ -173,6 +177,8 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+
 
   _buildRecommended() {
     return SingleChildScrollView(

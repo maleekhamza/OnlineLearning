@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elearning_applicaton/theme/color.dart';
-
+import 'package:elearning_applicaton/models/courses.dart';
 import 'custom_image.dart';
 
 class FeatureItem extends StatelessWidget {
@@ -24,6 +25,7 @@ class FeatureItem extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
+
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.symmetric(vertical: 5),
         decoration: BoxDecoration(

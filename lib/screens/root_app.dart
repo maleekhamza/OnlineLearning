@@ -4,7 +4,8 @@ import 'package:elearning_applicaton/screens/chat.dart';
 import 'package:elearning_applicaton/theme/color.dart';
 import 'package:elearning_applicaton/utils/constant.dart';
 import 'package:elearning_applicaton/widgets/bottombar_item.dart';
-import 'explore.dart';
+import 'AddCourse.dart';
+import 'HomePage.dart';
 import 'home.dart';
 
 class RootApp extends StatefulWidget {
@@ -21,21 +22,16 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
       "icon": "assets/icons/home.svg",
       "active_icon": "assets/icons/home.svg",
       "page": HomePage(),
-    },
-    {
-      "icon": "assets/icons/search.svg",
-      "active_icon": "assets/icons/search.svg",
-      "page": ExplorePage(),
-    },
+    },/*
     {
       "icon": "assets/icons/play.svg",
       "active_icon": "assets/icons/play.svg",
       "page": Container(),
-    },
+    },*/
     {
       "icon": "assets/icons/chat.svg",
       "active_icon": "assets/icons/chat.svg",
-      "page": ChatPage(),
+      "page": AddCourse(),
     },
     {
       "icon": "assets/icons/profile.svg",

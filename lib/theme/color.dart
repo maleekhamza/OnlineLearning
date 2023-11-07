@@ -28,6 +28,7 @@ class AppColor {
   static const sky = Color(0xFFABDEE6);
   static const blue = Color(0xFF509BE4);
 
+
   static const listColors = [
     green,
     purple,

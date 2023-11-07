@@ -138,7 +138,7 @@ List features = [
   {
     "id" : 100,
     "name" : "UI/UX Design",
-    "image" : "https://images.unsplash.com/photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
+    "image" : "https://images.unsplash./photo-1596638787647-904d822d751e?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTF8fGZhc2hpb258ZW58MHx8MHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=60",
     "price" : "\DT110.00",
     "duration" : "10 hours",
     "session" : "6 lessons",
