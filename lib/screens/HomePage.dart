@@ -1,17 +1,19 @@
+import 'dart:typed_data';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../theme/color.dart';
-import '../utils/constant.dart';
 import '../utils/data.dart';
 import '../widgets/category_box.dart';
-import '../widgets/custom_image.dart';
 import '../widgets/notification_box.dart';
 import '../widgets/recommend_item.dart';
 import 'Details.dart';
-import 'DetailsPage.dart';
+import 'loginScreen.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
 
   String searchQuery = '';
   final CollectionReference courses = FirebaseFirestore.instance.collection(
@@ -112,7 +115,13 @@ class _HomePageState extends State<HomePage> {
         ),
         NotificationBox(
           notifiedNumber: 1,
-        )
+        ),
+        IconButton(
+          onPressed: () {
+            logout(context);
+          },
+          icon: Icon(Icons.logout,color: Colors.black,),
+        ),
       ],
     );
   }
@@ -225,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: filteredOffers.length,
 
                   options: CarouselOptions(
-                    height: 250, // Set the desired height for your slider
+                    height: 300, // Set the desired height for your slider
                     viewportFraction: 0.8,
                     initialPage: 0,
                     enableInfiniteScroll: true,
@@ -259,12 +268,16 @@ class _HomePageState extends State<HomePage> {
                           onTap: onTap,
                           child: Column(
                             children: [
-                              Image.network(
-                                offerSnap['images'],
+                              Image.memory(
+                                base64Decode(offerSnap['images']
+                                    .toString()
+                                    .split(',')
+                                    .last),
                                 height: 150,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               ),
+
                               _buildPrice(offerSnap),
                               _buildInfo(offerSnap),
                             ],
@@ -380,6 +393,16 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           fontWeight: FontWeight.w500,
         ),
+      ),
+    );
+  }
+  Future<void> logout(BuildContext context) async {
+    CircularProgressIndicator();
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
       ),
     );
   }

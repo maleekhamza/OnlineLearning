@@ -108,12 +108,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: _isObscure3,
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
-                                    icon: Icon(_isObscure
+                                    icon: Icon(_isObscure3
                                         ? Icons.visibility_off
                                         : Icons.visibility),
                                     onPressed: () {
                                       setState(() {
-                                        _isObscure = !_isObscure;
+                                        _isObscure3 = !_isObscure3;
                                       });
                                     }),
                                 filled: true,
@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'Sign up',
+                                      'Sign in',
                                       style: GoogleFonts.robotoCondensed(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,

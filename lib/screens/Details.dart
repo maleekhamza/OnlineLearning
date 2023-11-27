@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -43,12 +44,12 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
   buildAppbar() {
     return AppBar(
       title: Text(
-        "Details",
-        style: TextStyle(color: Colors.black),
+        "Details Page",
+        style: TextStyle(color: Colors.white),
       ),
       elevation: 0.0,
       iconTheme: IconThemeData(color: Colors.black),
-      backgroundColor: Colors.pinkAccent,
+      backgroundColor: Colors.grey,
       leading: IconButton(
         icon: Icon(
           Icons.arrow_back,
@@ -75,8 +76,11 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
       padding: EdgeInsets.fromLTRB(15, 20,15,20),
       child: Column(
         children: [
-          Image.network(
-            widget.offerSnap['images'],
+          Image.memory(
+            base64Decode(widget.offerSnap['images']
+                .toString()
+                .split(',')
+                .last),
             width: double.infinity,
             height: 200,
           ),
@@ -84,6 +88,7 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
           getInfo(),
           SizedBox(height: 20,),
           getTabBar(),
+          getTabbarPages(),
         ],
       ),
     );
@@ -112,13 +117,9 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
           physics: NeverScrollableScrollPhysics(),
           controller: tabController,
           children: [
-            Container(
-              child: Text("lessons"),
-
-            ),
+            getLessons(),
             Container(
               child: Center(child: Text("Excercices")),
-
             ),
 
 
@@ -129,8 +130,8 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
 
   Widget getLessons(){
     return ListView.builder(
-      itemCount: 3,
-      itemBuilder: (context, index)=> LessonItem(data: courses[index]),
+      itemCount: lessons.length,
+      itemBuilder: (context, index)=> LessonItem(data: lessons[index]),
     );
   }
 

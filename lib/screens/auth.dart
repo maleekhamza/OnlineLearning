@@ -1,5 +1,4 @@
 import 'package:elearning_applicaton/screens/loginScreen.dart';
-import 'package:elearning_applicaton/screens/home.dart';
 import 'package:elearning_applicaton/screens/loginScreen.dart';
 import 'package:elearning_applicaton/screens/root_app.dart';
 import 'package:firebase_auth/firebase_auth.dart';

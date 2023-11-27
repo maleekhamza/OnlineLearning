@@ -6,7 +6,7 @@ import 'package:elearning_applicaton/utils/constant.dart';
 import 'package:elearning_applicaton/widgets/bottombar_item.dart';
 import 'AddCourse.dart';
 import 'HomePage.dart';
-import 'home.dart';
+
 
 class RootApp extends StatefulWidget {
   const RootApp({Key? key}) : super(key: key);

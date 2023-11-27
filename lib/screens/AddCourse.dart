@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elearning_applicaton/screens/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +21,6 @@ class AddCourse extends StatefulWidget {
 
 class _AddCourseState extends State<AddCourse> {
   TextEditingController name = TextEditingController();
-
   TextEditingController description = TextEditingController();
   TextEditingController session = TextEditingController();
   TextEditingController review = TextEditingController();
@@ -85,12 +83,21 @@ class _AddCourseState extends State<AddCourse> {
     return
       Scaffold(
         appBar: AppBar(
-          title: Text("Add offers"),
+          title: Text("Add Course"),
           backgroundColor: kPrimaryColor,
         ),
 
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+        body: Center(
+           child: Container(
+          width: 700,
+
+           padding: const EdgeInsets.all(16),
+         margin: const EdgeInsets.all(16),
+         decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+           borderRadius: BorderRadius.circular(10),
+           ),
+
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -409,7 +416,7 @@ class _AddCourseState extends State<AddCourse> {
             ),
           ),
         ),
-
+        ),
       );
   }
 }
