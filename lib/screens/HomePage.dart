@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   String searchQuery = '';
   final CollectionReference courses = FirebaseFirestore.instance.collection(
       'courses');
-
+  String selectedCategory = '';
   List<DocumentSnapshot> filteredOffers = [];
 
 
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
       }).toList();
     }
   }
+
 
   // Initialize 'width' and 'height' here, based on your requirements.
 
@@ -245,8 +246,9 @@ class _HomePageState extends State<HomePage> {
                   padding: const EdgeInsets.only(right: 15),
                   child: GestureDetector(
                     onTap: () {
-                      // Handle the onTap action here
-                      // You can call the provided onTap function or add your logic
+                      setState(() {
+                        selectedCategory = doc.id;
+                      });
                       onTap?.call();
                     },
                     child: Column(
@@ -347,14 +349,14 @@ class _HomePageState extends State<HomePage> {
         children: [
 
           StreamBuilder(
-            stream: courses.orderBy('timestamp', descending: true).snapshots(),
+           stream: courses.orderBy('timestamp', descending: true).snapshots(),
             builder: (context, AsyncSnapshot snapshot) {
               filterOffers(snapshot);
 
               if (snapshot.hasData) {
+
                 return CarouselSlider.builder(
                   itemCount: filteredOffers.length,
-
                   options: CarouselOptions(
                     height: 300, // Set the desired height for your slider
                     viewportFraction: 0.8,
