@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -398,33 +399,49 @@ late User? _currentUser;
                           ),
                         );
                       },
+                      
                       child: Container(
-                        width: width, // Set the desired width for each item
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: Colors.grey[200],
-
-                        ),
-                        child: GestureDetector(
-                          onTap: onTap,
-                          child: Column(
-                            children: [
-                              Image.memory(
-                                base64Decode(offerSnap['images']
-                                    .toString()
-                                    .split(',')
-                                    .last),
-                                height: 150,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-
-                              _buildPrice(offerSnap),
-                              _buildInfo(offerSnap),
-                            ],
-                          ),
+                      width: width, // Set the desired width for each item
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.grey[200],
+                                              
+                      ),
+                      child: GestureDetector(
+                        onTap: onTap,
+                        child: Stack(
+                          children: [
+                            Column(
+                              children: [
+                                Expanded(
+                                  
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20), // Add the border radius
+                                  ),
+                                    child: Image.memory(
+                                      base64Decode(offerSnap['images']
+                                          .toString()
+                                          .split(',')
+                                          .last),
+                                      height: 110,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                _buildInfo(offerSnap),
+                              ],
+                            ),
+                            Positioned(
+                              top: 225, // Adjust the top value for positioning
+                              right: 5,
+                              child: _buildPrice(offerSnap),
+                            ),
+                          ],
                         ),
                       ),
+                                              ),
                     );
                   },
                 );
@@ -471,7 +488,7 @@ late User? _currentUser;
         _getAttribute(
           Icons.play_circle_outlined,
           AppColor.labelColor,
-          offerSnap['session'],
+          '${offerSnap['session'].toString()} lessons',
         ),
         const SizedBox(
           width: 12,
@@ -479,16 +496,12 @@ late User? _currentUser;
         _getAttribute(
           Icons.schedule_rounded,
           AppColor.labelColor,
-          offerSnap['duration'],
+          '${offerSnap['duration'].toString()} h',
         ),
         const SizedBox(
           width: 12,
         ),
-        _getAttribute(
-          Icons.star,
-          AppColor.yellow,
-          offerSnap['review'],
-        ),
+       
       ],
     );
   }
@@ -529,7 +542,7 @@ late User? _currentUser;
         ],
       ),
       child: Text(
-        offerSnap["price"],
+        '${offerSnap['price'].toString()} dt',
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w500,
