@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:elearning_applicaton/screens/account.dart';
+import 'package:elearning_applicaton/screens/Profile/profilePage.dart';
 import 'package:elearning_applicaton/screens/chat.dart';
 import 'package:elearning_applicaton/theme/color.dart';
 import 'package:elearning_applicaton/utils/constant.dart';
@@ -36,7 +36,7 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
     {
       "icon": "assets/icons/profile.svg",
       "active_icon": "assets/icons/profile.svg",
-      "page": AccountPage(),
+      "page": ProfileScreen(),
     },
   ];
 

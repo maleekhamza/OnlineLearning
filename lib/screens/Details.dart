@@ -25,6 +25,7 @@ class details extends StatefulWidget {
 
 class _detailsState extends State<details>with SingleTickerProviderStateMixin{
   late TabController tabController;
+  late var data;
   @override
   void initState() {
     // TODO: implement initState
@@ -147,11 +148,7 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin{
                 "Course1",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500,color: Colors.black),
               ),
-
-
               SizedBox(height: 10,),
-
-
             ],
           ),
           SizedBox(

@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      'Sign in',
+                                      'Sign In',
                                       style: GoogleFonts.robotoCondensed(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -270,6 +270,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+
 
   void route() {
     User? user = FirebaseAuth.instance.currentUser;

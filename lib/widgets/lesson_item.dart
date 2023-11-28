@@ -36,7 +36,7 @@ class LessonItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Lessons",
+                 data["name"],
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -54,7 +54,7 @@ class LessonItem extends StatelessWidget {
                       size: 14,
                     ),
                     Text(
-                      "10 hours",
+                      data["duration"],
                       style: TextStyle(color: Colors.blueGrey,fontSize: 13),
                     ),
                   ],
@@ -68,3 +68,4 @@ class LessonItem extends StatelessWidget {
     );
   }
 }
+
