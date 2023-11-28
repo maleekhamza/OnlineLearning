@@ -23,7 +23,7 @@ class _AddCourseState extends State<AddCourse> {
   TextEditingController name = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController session = TextEditingController();
-  TextEditingController review = TextEditingController();
+  TextEditingController discount = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController duration = TextEditingController();
   DateTime _selecteddate = DateTime.now();
@@ -35,7 +35,7 @@ class _AddCourseState extends State<AddCourse> {
       'name': name.text,
       'description': description.text,
       'session': session.text,
-      'review': review.text,
+      'review': discount.text,
       'price': price.text,
       'duration': duration.text,
       'images':imageurl,
@@ -218,7 +218,7 @@ class _AddCourseState extends State<AddCourse> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'review',
+                        'discount',
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 18,
@@ -226,7 +226,7 @@ class _AddCourseState extends State<AddCourse> {
                       ),
                       SizedBox(height: 10,),
                       TextFormField(
-                        controller: review,
+                        controller: discount,
                         decoration: InputDecoration(
                           hintText: 'review',
                           hintStyle: TextStyle(
