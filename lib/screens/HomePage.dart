@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elearning_applicaton/screens/AllCourses.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:elearning_applicaton/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +17,6 @@ import '../widgets/category_box.dart';
 import '../widgets/notification_box.dart';
 import '../widgets/recommend_item.dart';
 import 'Details.dart';
-import 'loginScreen.dart';
-import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,6 +27,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+late User? _currentUser;
+  late Map<String, dynamic> _userData = {};
+  
+   Future<void> _fetchUserData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      setState(() {
+        _currentUser = user;
+      });
+
+      DocumentSnapshot<Map<String, dynamic>> snapshot =
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      setState(() {
+        _userData = snapshot.data() ?? {};
+      
+      });
+    }
+  }
 
   String searchQuery = '';
   final CollectionReference courses = FirebaseFirestore.instance.collection(
@@ -54,7 +76,9 @@ class _HomePageState extends State<HomePage> {
   double height = 0; // Initialize to any default value
   @override
   void initState() {
+
     super.initState();
+    _fetchUserData();
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
       setState(() {
         width = MediaQuery.of(context).size.width;
@@ -98,7 +122,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                profile["name"]!,
+              profile["name"] ?? 'No Name Available',
                 style: TextStyle(
                   color: AppColor.labelColor,
                   fontSize: 14,
@@ -120,13 +144,7 @@ class _HomePageState extends State<HomePage> {
         ),
         NotificationBox(
           notifiedNumber: 1,
-        ),
-        IconButton(
-          onPressed: () {
-            logout(context);
-          },
-          icon: Icon(Icons.logout,color: Colors.black,),
-        ),
+        )
       ],
     );
   }
@@ -319,24 +337,25 @@ class _HomePageState extends State<HomePage> {
     );
   }*/
 
-  _buildRecommended() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: List.generate(
-          recommends.length,
-              (index) =>
-              Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: RecommendItem(
-                  data: recommends[index],
-                ),
-              ),
+ _buildRecommended() {
+  return SingleChildScrollView(
+    padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: List.generate(
+        recommends.length,
+        (index) => Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: Expanded( // Use Expanded to allow the content to fit within the available space
+            child: RecommendItem(
+              data: recommends[index],
+            ),
+          ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   _buildFeatured() {
     return SingleChildScrollView(
@@ -468,7 +487,7 @@ class _HomePageState extends State<HomePage> {
         _getAttribute(
           Icons.star,
           AppColor.yellow,
-          offerSnap['discount'],
+          offerSnap['review'],
         ),
       ],
     );
@@ -515,16 +534,6 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
           fontWeight: FontWeight.w500,
         ),
-      ),
-    );
-  }
-  Future<void> logout(BuildContext context) async {
-    CircularProgressIndicator();
-    await FirebaseAuth.instance.signOut();
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) => LoginScreen(),
       ),
     );
   }
