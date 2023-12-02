@@ -4,14 +4,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elearning_applicaton/Screens/loginScreen.dart';
 import 'package:elearning_applicaton/screens/Profile/editProfile.dart';
-import 'package:elearning_applicaton/screens/repository/authenticationRepository.dart';
-import 'package:elearning_applicaton/screens/repository/userRepository.dart';
+
 import 'package:elearning_applicaton/widgets/profileMenu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 
 
 
@@ -137,25 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context: context,
                       builder: (context){
                         return Container(
-                          child: AlertDialog(
-                            title: Text('Voulez-vous déconnectez ?'),
-                            actions: [
-                       TextButton(onPressed:(){
-                        Navigator.pop(context);
-                              }, 
-                              child: Text('Non')),
-                              TextButton(onPressed:(){
-                                print("pressed here");
-                                AuthentificationRepository.instance.logout().
-                                            then((value) {
-                                  print("signed out");
-                                  Navigator.push(context, 
-                                  MaterialPageRoute(builder: (context)=>LoginScreen()));
-                           });
-                              }, 
-                              child: Text('Oui',style: TextStyle(color:Colors.blue),)),
-                            ],
-                          ),
+
                         );
                       });
                

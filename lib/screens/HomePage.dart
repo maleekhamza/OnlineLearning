@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'dart:typed_data';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,6 +16,7 @@ import '../utils/data.dart';
 import '../widgets/category_box.dart';
 import '../widgets/notification_box.dart';
 import '../widgets/recommend_item.dart';
+import 'CoursesByCategory.dart';
 import 'Details.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,7 +56,17 @@ late User? _currentUser;
   String selectedCategory = '';
   List<DocumentSnapshot> filteredOffers = [];
 
+Future<void> _fetchCoursesByCategory(String category) async {
+  QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('courses')
+      .where('category', isEqualTo: category)
+      .orderBy('timestamp', descending: true)
+      .get();
 
+  setState(() {
+    filteredOffers = snapshot.docs;
+  });
+}
   void filterOffers(AsyncSnapshot snapshot) {
     if (snapshot.hasData) {
       filteredOffers = snapshot.data!.docs.where((offerSnap) {
@@ -238,87 +248,89 @@ late User? _currentUser;
     );
   }
 
-  Widget _buildCategories() {
-    bool isSelected = false;
-    Color selectedColor = AppColor.actionColor; // Replace this with your desired color
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection('categories').snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // Loading state while waiting for data
-          return CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          // Handle error
-          return Text('Error: ${snapshot.error}');
-        } else {
-          // Data loaded successfully
-          List<DocumentSnapshot> categoryDocs = snapshot.data!.docs;
+Widget _buildCategories() {
+  bool isSelected = false;
+  Color selectedColor = AppColor.actionColor; // Replace this with your desired color
+  return StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('categories').snapshots(),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        // Loading state while waiting for data
+        return CircularProgressIndicator();
+      } else if (snapshot.hasError) {
+        // Handle error
+        return Text('Error: ${snapshot.error}');
+      } else {
+        // Data loaded successfully
+        List<DocumentSnapshot> categoryDocs = snapshot.data!.docs;
 
-          return SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(15, 10, 0, 10),
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: categoryDocs.map((doc) {
-                Map<String, dynamic> categoryData = doc.data() as Map<String, dynamic>;
+        return SingleChildScrollView(
+          padding: EdgeInsets.fromLTRB(15, 10, 0, 10),
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: categoryDocs.map((doc) {
+              Map<String, dynamic> categoryData = doc.data() as Map<String, dynamic>;
 
-                return Padding(
-                  padding: const EdgeInsets.only(right: 15),
-                  child: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedCategory = doc.id;
-                      });
-                      onTap?.call();
-                    },
-                    child: Column(
-                      children: [
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.fastOutSlowIn,
-                          padding: EdgeInsets.all(0.8),
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColor.shadowColor.withOpacity(0.1),
-                                spreadRadius: 1,
-                                blurRadius: 1,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                            shape: BoxShape.circle,
-                          ),
-                          child: ClipOval(
-                            child: Image.network(
-                              categoryData["image"],
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover, // Ensure the image covers the entire space
+              return Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CoursesByCategory(selectedCategory: categoryData["libelle"]),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.fastOutSlowIn,
+                        padding: EdgeInsets.all(0.8),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColor.shadowColor.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: Offset(1, 1),
                             ),
+                          ],
+                          shape: BoxShape.circle,
+                        ),
+                        child: ClipOval(
+                          child: Image.network(
+                            categoryData["image"],
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        categoryData["libelle"],
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        style: TextStyle(
+                          color: AppColor.textColor,
+                          fontWeight: FontWeight.w500,
                         ),
-                        Text(
-                          categoryData["libelle"],
-                          maxLines: 1,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                            color: AppColor.textColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                );
-              }).toList(),
-            ),
-          );
-        }
-      },
-    );
-  }
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      }
+    },
+  );
+}
   /*_buildCategories() {
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(15, 10, 0, 10),
@@ -340,18 +352,20 @@ late User? _currentUser;
     );
   }*/
 
- _buildRecommended() {
+Widget _buildRecommended() {
   return SingleChildScrollView(
     padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
     scrollDirection: Axis.horizontal,
-    child: Row(
-      children: List.generate(
-        recommends.length,
-        (index) => Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: Expanded( // Use Expanded to allow the content to fit within the available space
-            child: RecommendItem(
-              data: recommends[index],
+    child: Container( // Wrap the Row with a Container
+      child: Row(
+        children: List.generate(
+          recommends.length,
+              (index) => Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Expanded(
+              child: RecommendItem(
+                data: recommends[index],
+              ),
             ),
           ),
         ),
@@ -359,102 +373,129 @@ late User? _currentUser;
     ),
   );
 }
+int _parseDiscount(String? discount) {
+  return int.tryParse(discount ?? "") ?? 0;
+}
+Widget _buildFeatured() {
+  final bool isShadow=true;
+  final Color? borderColor;
+  final Color? bgColor;
+  return SingleChildScrollView(
+    padding: const EdgeInsets.all(10.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        StreamBuilder(
+          stream: courses.orderBy('timestamp', descending: true).snapshots(),
+          builder: (context, AsyncSnapshot snapshot) {
+            filterOffers(snapshot);
 
-  _buildFeatured() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
+            if (snapshot.hasData) {
+              return CarouselSlider.builder(
+                itemCount: filteredOffers.length,
+                options: CarouselOptions(
+                  height: 300,
+                  viewportFraction: 0.8,
+                  initialPage: 0,
+                  enableInfiniteScroll: true,
+                  reverse: false,
+                  autoPlay: false,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+                  scrollDirection: Axis.horizontal,
+                ),
+                itemBuilder: (context, index, realIndex) {
+                  final DocumentSnapshot offerSnap = filteredOffers[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => details(offerSnap: offerSnap),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: width,
+                      height: height,
 
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          StreamBuilder(
-           stream: courses.orderBy('timestamp', descending: true).snapshots(),
-            builder: (context, AsyncSnapshot snapshot) {
-              filterOffers(snapshot);
-
-              if (snapshot.hasData) {
-
-                return CarouselSlider.builder(
-                  itemCount: filteredOffers.length,
-                  options: CarouselOptions(
-                    height: 300, // Set the desired height for your slider
-                    viewportFraction: 0.8,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
-                    reverse: false,
-                    autoPlay: false,
-                    autoPlayInterval: Duration(seconds: 3),
-                    autoPlayAnimationDuration: Duration(milliseconds: 800),
-                    autoPlayCurve: Curves.fastOutSlowIn,
-                    enlargeCenterPage: true,
-                    scrollDirection: Axis.horizontal, // Set the scroll direction to horizontal
-                  ),
-                  itemBuilder: (context, index, realIndex) {
-                    final DocumentSnapshot offerSnap = filteredOffers[index];
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => details(offerSnap:offerSnap),
-                          ),
-                        );
-                      },
-                      
-                      child: Container(
-                      width: width, // Set the desired width for each item
+                      padding: EdgeInsets.all(10),
+                      margin: EdgeInsets.symmetric(vertical: 5),
                       decoration: BoxDecoration(
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.grey[200],
-                                              
                       ),
-                      child: GestureDetector(
-                        onTap: onTap,
-                        child: Stack(
-                          children: [
-                            Column(
-                              children: [
-                                Expanded(
-                                  
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20), // Add the border radius
+                      child: Stack(
+                        children: [
+                          Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
-                                    child: Image.memory(
-                                      base64Decode(offerSnap['images']
-                                          .toString()
-                                          .split(',')
-                                          .last),
-                                      height: 110,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  child: Image.memory(
+                                    base64Decode(offerSnap['images']
+                                        .toString()
+                                        .split(',')
+                                        .last),
+                                    height: 110,
+
+
                                   ),
                                 ),
-                                _buildInfo(offerSnap),
+                              ),
+                              _buildInfo(offerSnap),
+                            ],
+                          ),
+                          Positioned(
+                            top:5, // Adjust this value to your desired position for the discount
+                            right: 5,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                if (_parseDiscount(offerSnap['discount']) > 0)
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Text(
+                                      '${offerSnap['discount']}% off',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
                               ],
                             ),
-                            Positioned(
-                              top: 225, // Adjust the top value for positioning
-                              right: 5,
-                              child: _buildPrice(offerSnap),
-                            ),
-                          ],
-                        ),
+                          ),
+                          Positioned(
+                            bottom: 25,
+                            right: 5,
+                            child: _buildPrice(offerSnap),
+                          ),
+                        ],
                       ),
-                                              ),
-                    );
-                  },
-                );
-              }
-              return Container();
-            },
-          ),
-        ],
-      ),
-    );
-  }
+                    ),
+                  );
+                },
+              );
+            }
+            return Container();
+          },
+        ),
+      ],
+    ),
+  );
+}
 
 
   Widget _buildInfo(DocumentSnapshot offerSnap) {

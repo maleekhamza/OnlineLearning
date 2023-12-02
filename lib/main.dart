@@ -1,11 +1,10 @@
-import 'package:elearning_applicaton/screens/repository/authenticationRepository.dart';
+
 import 'package:elearning_applicaton/screens/root_app.dart';
 import 'package:elearning_applicaton/theme/color.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 
 import 'Screens/loginScreen.dart';
 
@@ -37,7 +36,7 @@ Future<void> main() async {
     // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     appleProvider: AppleProvider.appAttest,
   );
-  Get.put(AuthentificationRepository());
+
   runApp(MyApp());
 }
 
