@@ -21,8 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isObscure = true;
   bool visible = false;
   final _formkey = GlobalKey<FormState>();
-  final TextEditingController emailController = new TextEditingController();
-  final TextEditingController passwordController = new TextEditingController();
+  final TextEditingController emailController = new TextEditingController(text:'nour@gmail.com');
+  final TextEditingController passwordController = new TextEditingController(text: '123456');
 
   final _auth = FirebaseAuth.instance;
   @override

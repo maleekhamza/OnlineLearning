@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,11 +13,15 @@ class CoursesByCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Courses Of $selectedCategory'),
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Scaffold(
+        
+        appBar: AppBar(
+          title: Text('Courses Of $selectedCategory'),
+        ),
+        body: _buildCoursesList(),
       ),
-      body: _buildCoursesList(),
     );
   }
 
@@ -38,7 +43,7 @@ class CoursesByCategory extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
               DocumentSnapshot courseSnap = snapshot.data!.docs[index];
-              return _buildCourseCard(courseSnap);
+              return _buildCourseCard(context,courseSnap);
             },
           );
         }
@@ -48,36 +53,62 @@ class CoursesByCategory extends StatelessWidget {
   int _parseDiscount(String? discount) {
     return int.tryParse(discount ?? "") ?? 0;
   }
-  Widget _buildCourseCard(DocumentSnapshot courseSnap) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.0),
-      ),
-      elevation: 5,
-      margin: EdgeInsets.all(10),
-      child: Column(
+  Widget _buildCourseCard(BuildContext context,DocumentSnapshot courseSnap) {
+  return Container(
+    width: 250,
+    height: 260,
+    padding: EdgeInsets.all(10),
+    margin: EdgeInsets.only(bottom: 5, top: 5),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(.1),
+          spreadRadius: 1,
+          blurRadius: 1,
+          offset: Offset(1, 1),
+        )
+      ],
+    ),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            child: Image.memory(
-              base64Decode(courseSnap['images']
-                  .toString()
-                  .split(',')
-                  .last),
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
+          Column(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 170,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.memory(
+                    base64Decode(courseSnap['images']
+                        .toString()
+                        .split(',')
+                        .last),
+                    width: MediaQuery.of(context).size.width * 0.2,
+                    height: 10,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SizedBox(height: 9,),
+              Positioned(
+                top: 160,
+                child: _buildInfo(courseSnap),
+              ),
+            ],
           ),
-          ListTile(
-            title: Text(courseSnap['name']),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Positioned(
+            top: 5, // Adjust this value to your desired position for the discount
+            right: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                _buildAttributes(courseSnap),
                 if (_parseDiscount(courseSnap['discount']) > 0)
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -96,10 +127,40 @@ class CoursesByCategory extends StatelessWidget {
                       ),
                     ),
                   ),
-                _buildPrice(courseSnap),
               ],
             ),
           ),
+          Positioned(
+            top: 150, // Adjust the top value for positioning
+            right: 15,
+            child: _buildPrice(courseSnap),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+Widget _buildInfo(DocumentSnapshot offerSnap) {
+    return Container(
+    //  width: width - 20,
+      padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            offerSnap['name'],
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 17,
+              color: AppColor.textColor,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          _buildAttributes(offerSnap),
         ],
       ),
     );
@@ -154,7 +215,7 @@ class CoursesByCategory extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.blue, // Change color as needed
+        color: AppColor.primary, // Change color as needed
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -174,4 +235,8 @@ class CoursesByCategory extends StatelessWidget {
       ),
     );
   }
+late GestureTapCallback onTap = () {
+    // Add your custom logic here
+  };
+
 }

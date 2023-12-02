@@ -1,24 +1,27 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:elearning_applicaton/theme/color.dart';
 
 class CustomImage extends StatelessWidget {
   CustomImage(
-      this.image, {
-        this.width = 100,
-        this.height = 100,
-        this.bgColor,
-        this.borderWidth = 0,
-        this.borderColor,
-        this.trBackground = false,
-        this.fit = BoxFit.cover,
-        this.isNetwork = true,
-        this.radius = 50,
-        this.borderRadius,
-        this.isShadow = true,
-      });
+    this.image, {
+    this.width = 100,
+    this.height = 100,
+    this.bgColor,
+    this.borderWidth = 0,
+    this.borderColor,
+    this.trBackground = false,
+    this.fit = BoxFit.cover,
+    this.isNetwork = true,
+    this.radius = 50,
+    this.borderRadius,
+    this.isShadow = true,
+  });
 
-  final String image;
+  final String image; // Declare the imageUrl parameter
   final double width;
   final double height;
   final double borderWidth;
@@ -33,6 +36,7 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     Uint8List decodedImage = base64Decode(image);
     return Container(
       width: width,
       height: height,
@@ -45,22 +49,20 @@ class CustomImage extends StatelessWidget {
               color: AppColor.shadowColor.withOpacity(0.1),
               spreadRadius: 1,
               blurRadius: 1,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: Offset(0, 1),
             ),
         ],
       ),
-      child: isNetwork
-          ? _buildNetworkImage()
-          : Image(
-        image: AssetImage(image),
-        fit: fit,
+      child: Image.memory(
+        decodedImage,
+        fit: BoxFit.cover,
       ),
     );
   }
 
   Widget _buildNetworkImage() {
     return CachedNetworkImage(
-      imageUrl: image,
+      imageUrl: image, // Use the provided imageUrl
       placeholder: (context, url) => BlankImageWidget(),
       errorWidget: (context, url, error) => BlankImageWidget(),
       imageBuilder: (context, imageProvider) => Container(
