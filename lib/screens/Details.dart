@@ -14,6 +14,7 @@ import '../widgets/lesson_item.dart';
 import 'package:elearning_applicaton/widgets/custom_image.dart';
 
 import 'PdfViewerScreen.dart';
+import 'WebViewPage.dart';
 
 
 
@@ -45,6 +46,7 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: buildAppbar(),
       body: buildBody(),
+      bottomNavigationBar: getFooter(),
     );
   }
 
@@ -122,19 +124,88 @@ class _detailsState extends State<details>with SingleTickerProviderStateMixin {
       height: 200,
       width: double.infinity,
       child: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: tabController,
-          children: [
-            getLessons(),
-            Container(
-              child: Center(child: Text("Excercices")),
-            ),
-
-
-          ]),
+        physics: NeverScrollableScrollPhysics(),
+        controller: tabController,
+        children: [
+          getLessons(),
+          getExercises(),
+        ],
+      ),
     );
   }
 
+  Widget getExercises() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('courses')
+          .doc(widget.offerSnap.id)
+          .collection('exercise')
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          return Text('No exercises available.');
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: snapshot.data!.docs.length,
+          itemBuilder: (BuildContext context, int index) {
+            var exercise = snapshot.data!.docs[index];
+            return GestureDetector(
+              onTap: () {
+                // Open the Google Form link when the exercise name is tapped
+                launchGoogleForm(exercise['formLink']);
+                print(exercise['formLink']);
+              },
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.shadowColor.withOpacity(.07),
+                      spreadRadius: 1,
+                      blurRadius: 1,
+                      offset: Offset(1, 1),
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  title: Text(
+                    exercise["name"],
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+  void launchGoogleForm(String formLink) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewPage(formLink: formLink),
+      ),
+    );
+  }
   Widget getLessons() {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
@@ -319,11 +390,12 @@ Widget getInfo() {
     return Container(
       width: double.infinity,
       height: 80,
+      padding:EdgeInsets.fromLTRB(15, 0, 15, 20) ,
       decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: AppColor.shadowColor.withOpacity(.005),
+              color: AppColor.shadowColor.withOpacity(.05),
               spreadRadius: 1,
               blurRadius: 1,
               offset: Offset(0, 0),
@@ -331,13 +403,31 @@ Widget getInfo() {
           ]
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("price"),
-                Text("price"),
+                Text("price",style:TextStyle(fontSize: 13,
+                fontWeight: FontWeight.w500,
+                  color: AppColor.textColor
+                )),
+                SizedBox(height: 3,),
+                Text("\$100" ,style:TextStyle(fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.textColor
+                )),
               ],
             ),
+            SizedBox(width: 30),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  // Handle button press
+                },
+                child: Text('Buy Now'),
+              ),
+            )
           ]),
     );
   }
