@@ -193,9 +193,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   setState(() {
                                     visible = true;
                                   });
+                                  if (_formkey.currentState!.validate()) {
                                   signIn(
                                       emailController.text, passwordController.text);
-                                },
+                                }},
 
                                 child: Container(
                                   padding: const EdgeInsets.all(16),

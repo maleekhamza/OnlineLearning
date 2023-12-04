@@ -53,38 +53,7 @@ TextEditingController _imageController  = TextEditingController();
  final FirebaseAuth _auth = FirebaseAuth.instance;
   File? _imageFile;
    bool isObscure = true; // Step 1: Add isObscure variable
-/*void _showImagePicker(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext bc) {
-      return SafeArea(
-        child: Wrap(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.photo_library),
-              title: Text('Gallery'),
-              onTap: () {
-                _pickImage(ImageSource.gallery);
-                Navigator.of(context).pop();
-              },
-            ),
-            // Add more options like 'Camera' if needed
-          ],
-        ),
-      );
-    },
-  );
-}*/
-  /*Future<void> _pickImage(ImageSource source) async {
-  final picker = ImagePicker();
-  final pickedImage = await picker.pickImage(source: source);
-  if (pickedImage != null) {
-    setState(() {
-      _imageFile = File(pickedImage.path);
-      _imageController.text = Path.basename(_imageFile!.path);
-    });
-  }
-}*/
+
  
  Future<void> imagePicker(ImageSource source) async {
     try {
@@ -150,61 +119,65 @@ TextEditingController _imageController  = TextEditingController();
             Stack(
   children: [
     SizedBox(
-      width: 120,
-      height: 120,
-      child: InkWell(
-        onTap: () async {
-          await showModalBottomSheet(
-            context: context,
-            builder: (_) => BottomSheet(
-              onClosing: () {},
-              builder: (_) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    title: Text('Take a photo'),
-                    leading: Icon(Icons.camera_alt),
-                    onTap: () {
-                       imagePicker(ImageSource.camera);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  ListTile(
-                    title: Text('Choose from gallery'),
-                    leading: Icon(Icons.photo_library),
-                    onTap: () {
-                       imagePicker(ImageSource.gallery);
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
+  width: 120,
+  height: 120,
+  child: InkWell(
+    onTap: () async {
+      // Code to select image from gallery or camera
+      await showModalBottomSheet(
+      context: context,
+      builder: (_) => BottomSheet(
+        onClosing: () {},
+        builder: (_) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('Take a photo'),
+              leading: Icon(Icons.camera_alt),
+              onTap: () {
+                // Call a function to handle camera logic here
+                imagePicker(ImageSource.camera);
+                Navigator.of(context).pop(); // Close the bottom sheet
+              },
             ),
-          );
-        },
-        child: ClipOval(
-                      child: _imageFile != null && _imageFile!.existsSync()
-                          ? Image.file(_imageFile!, fit: BoxFit.cover)
-                          : imageUrl.isNotEmpty
-                              ? Image.network(
-                                  imageUrl,
-                                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    }
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Image.asset('assets/icons/profile.png'),
-                    ),
-                  ),
+            ListTile(
+              title: Text('Choose from gallery'),
+              leading: Icon(Icons.photo_library),
+              onTap: () {
+                // Call a function to handle gallery logic here
+                imagePicker(ImageSource.gallery);
+                Navigator.of(context).pop(); // Close the bottom sheet
+              },
+            ),
+          ],
+        ),
+      ),
+      );
+    },
+    child: ClipOval(
+      child: _imageFile != null && _imageFile!.existsSync()
+    ? Image.file(_imageFile!, fit: BoxFit.cover)
+    : imageUrl.isNotEmpty
+        ? Image.network(
+            imageUrl,
+            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null,
                 ),
+              );
+            },
+          )
+        : Image.asset('assets/icons/profile.png'),
+
+    ),
+  ),
+),
     Positioned(
       bottom: 0,
       right: 0,
