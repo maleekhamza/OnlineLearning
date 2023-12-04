@@ -61,6 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 20,
                           ),
                           TextFormField(
+                            key: Key('emailField'),
                             controller: emailController,
                             decoration: InputDecoration(
                               filled: true,
@@ -104,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Container(
                            // Adjust the width according to your needs
                             child: TextFormField(
+                              key: Key('passwordField'), // Add this line
                               controller: passwordController,
                               obscureText: _isObscure3,
                               decoration: InputDecoration(
@@ -189,6 +191,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Align(
                               alignment: Alignment.center,
                               child: MaterialButton(
+                                key: Key('loginButton'), // Add this line
                                 onPressed: () {
                                   setState(() {
                                     visible = true;
