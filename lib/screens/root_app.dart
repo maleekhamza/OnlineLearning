@@ -1,3 +1,4 @@
+import 'package:elearning_applicaton/screens/quizScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:elearning_applicaton/screens/Profile/profilePage.dart';
 import 'package:elearning_applicaton/screens/chat.dart';
@@ -6,6 +7,7 @@ import 'package:elearning_applicaton/utils/constant.dart';
 import 'package:elearning_applicaton/widgets/bottombar_item.dart';
 import 'AddCourse.dart';
 import 'HomePage.dart';
+import 'PurchasedCoursesScreen.dart';
 
 
 class RootApp extends StatefulWidget {
@@ -31,7 +33,7 @@ class _RootAppState extends State<RootApp> with TickerProviderStateMixin {
     {
       "icon": "assets/icons/chat.svg",
       "active_icon": "assets/icons/chat.svg",
-      "page": AddCourse(),
+      "page": PurchasedCoursesScreen(),
     },
     {
       "icon": "assets/icons/profile.svg",

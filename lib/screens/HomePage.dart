@@ -4,13 +4,13 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elearning_applicaton/screens/AllCourses.dart';
+import 'package:elearning_applicaton/screens/FavoritesPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:elearning_applicaton/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import '../theme/color.dart';
 import '../utils/data.dart';
 import '../widgets/category_box.dart';
@@ -168,26 +168,57 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(15),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: 'Search...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColor.shadowColor.withOpacity(.05),
+                          blurRadius: .5,
+                          spreadRadius: .5,
+                          offset: Offset(0, 0),
+                        )
+                      ],
+                    ),
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          searchQuery = value;
+                        });
+                      },
+                      style: TextStyle(fontSize: 16),
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        prefixIcon: Icon(Icons.search, color: Colors.grey),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(width: 10),
+                Container(
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: AppColor.primary,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: SvgPicture.asset(
+                    "assets/icons/filter.svg",
+                    color: Colors.white, // Set the desired color
+                  ),
+
+                ),
+              ],
             ),
           ),
           _buildCategories(),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           Padding(
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
@@ -203,7 +234,6 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigate to the desired page (replace 'YourPage' with the actual page class)
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -220,9 +250,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           _buildFeatured(),
-          const SizedBox(
-            height: 15,
-          ),
+          const SizedBox(height: 15),
           Padding(
             padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
             child: Row(
@@ -231,9 +259,10 @@ class _HomePageState extends State<HomePage> {
                 Text(
                   "Recommended",
                   style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: AppColor.textColor),
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: AppColor.textColor,
+                  ),
                 ),
                 Text(
                   "See all",
@@ -353,7 +382,9 @@ class _HomePageState extends State<HomePage> {
   }*/
 
   Widget _buildRecommended() {
-    return SingleChildScrollView(
+    return _buildFeaturedWithoutDiscount();
+
+    /*return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(15, 5, 0, 5),
       scrollDirection: Axis.horizontal,
       child: Container( // Wrap the Row with a Container
@@ -371,12 +402,162 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-    );
+    );*/
   }
   int _parseDiscount(String? discount) {
     return int.tryParse(discount ?? "") ?? 0;
   }
   Widget _buildFeatured() {
+    final bool isShadow = true;
+    final Color? borderColor;
+    final Color? bgColor;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          StreamBuilder(
+            stream: courses.orderBy('timestamp', descending: true).snapshots(),
+            builder: (context, AsyncSnapshot snapshot) {
+              filterOffers(snapshot);
+
+              if (snapshot.hasData) {
+                // Filter the offers that have a discount
+                List<DocumentSnapshot> offersWithDiscount = filteredOffers
+                    .where((offerSnap) =>
+                _parseDiscount(offerSnap['discount']) > 0)
+                    .toList();
+
+                return CarouselSlider.builder(
+                  itemCount: offersWithDiscount.length,
+                  options: CarouselOptions(
+                    height: 290,
+                    viewportFraction: 0.8,
+                    initialPage: 0,
+                    enableInfiniteScroll: true,
+                    reverse: false,
+                    autoPlay: false,
+                    autoPlayInterval: Duration(seconds: 3),
+                    autoPlayAnimationDuration: Duration(milliseconds: 800),
+                    autoPlayCurve: Curves.fastOutSlowIn,
+                    enlargeCenterPage: true,
+                    disableCenter: true,
+                    scrollDirection: Axis.horizontal,
+                  ),
+                  itemBuilder: (context, index, realIndex) {
+                    final DocumentSnapshot offerSnap = offersWithDiscount[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                details(offerSnap: offerSnap),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 340,
+                        height: 260,
+                        padding: EdgeInsets.all(10),
+                        margin: EdgeInsets.only(bottom: 5, top: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(.1),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: Offset(1, 1),
+                            )
+                          ],
+                        ),
+                        child: GestureDetector(
+                          onTap: onTap,
+                          child: Stack(
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    height: 170,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.memory(
+                                        base64Decode(offerSnap['images']
+                                            .toString()
+                                            .split(',')
+                                            .last),
+                                        width: MediaQuery.of(context)
+                                            .size
+                                            .width *
+                                            0.2,
+                                        height: 10,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 9),
+                                  Positioned(
+                                    top: 160,
+                                    child: _buildInfo(offerSnap),
+                                  ),
+                                ],
+                              ),
+                              Positioned(
+                                top: 5, // Adjust this value to your desired position for the discount
+                                right: 5,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    if (_parseDiscount(offerSnap['discount']) > 0)
+                                      Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 4,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Text(
+                                          '${offerSnap['discount']}% off',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 150, // Adjust the top value for positioning
+                                right: 15,
+                                child: _buildPrice(offerSnap),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturedWithoutDiscount() {
     final bool isShadow=true;
     final Color? borderColor;
     final Color? bgColor;
@@ -395,9 +576,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: filteredOffers.length,
                   options: CarouselOptions(
                     height: 290,
-                    viewportFraction: 0.8,
-                    initialPage: 0,
-                    enableInfiniteScroll: true,
+                    enableInfiniteScroll: false,
                     reverse: false,
                     autoPlay: false,
                     autoPlayInterval: Duration(seconds: 3),
@@ -409,7 +588,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   itemBuilder: (context, index, realIndex) {
                     final DocumentSnapshot offerSnap = filteredOffers[index];
-                    return InkWell(
+                    if (_parseDiscount(offerSnap['discount']) == 0) {
+                      return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
@@ -435,73 +615,47 @@ class _HomePageState extends State<HomePage> {
                                 )
                               ]
                           ),
-                          child: GestureDetector(
-                            onTap: onTap,
-                            child: Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: double.infinity,
-                                      height: 170,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Image.memory(
-                                          base64Decode(offerSnap['images']
-                                              .toString()
-                                              .split(',')
-                                              .last),
-                                          width: MediaQuery.of(context).size.width * 0.2,
-                                          height: 10,
-                                          fit: BoxFit.cover,
-                                        ),
+                          child: Stack(
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                    width: double.infinity,
+                                    height: 170,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.memory(
+                                        base64Decode(offerSnap['images']
+                                            .toString()
+                                            .split(',')
+                                            .last),
+                                        width: MediaQuery.of(context).size.width * 0.2,
+                                        height: 10,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    SizedBox(height: 9,),
-                                    Positioned(
-                                        top: 160,
-                                        child: _buildInfo(offerSnap)),
-                                  ],
-                                ),
-                                Positioned(
-                                  top:5, // Adjust this value to your desired position for the discount
-                                  right: 5,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      if (_parseDiscount(offerSnap['discount']) > 0)
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.red,
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: Text(
-                                            '${offerSnap['discount']}% off',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
                                   ),
-                                ),
-                                Positioned(
-                                  top: 150, // Adjust the top value for positioning
-                                  right: 15,
-                                  child: _buildPrice(offerSnap),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(height: 9,),
+                                  Positioned(
+                                      top: 160,
+                                      child: _buildInfo(offerSnap)),
+                                ],
+                              ),
+                              Positioned(
+                                top: 150, // Adjust the top value for positioning
+                                right: 15,
+                                child: _buildPrice(offerSnap),
+                              ),
+                            ],
                           ),
-                        ));
+                        ),
+                      );
+                    } else {
+                      return Container(); // Don't display if there is a discount
+                    }
                   },
                 );
               }
@@ -512,7 +666,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 
   Widget _buildInfo(DocumentSnapshot offerSnap) {
     return Container(
@@ -557,8 +710,8 @@ class _HomePageState extends State<HomePage> {
           AppColor.labelColor,
           '${offerSnap['duration'].toString()} h',
         ),
-
-
+        
+       
       ],
     );
   }

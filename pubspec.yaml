@@ -54,6 +54,17 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^20.3.0
   flutter_inappwebview: any
   go_router: ^12.1.1
+  flutter_credit_card: any
+  http: ^0.13.3
+  stripe_checkout: ^1.0.0
+  flutter_stripe: ^4.0.0
+
+
+  
+
+
+
+
 
 dev_dependencies:
   flutter_test:

@@ -1,46 +1,51 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ProfileMenuWidget extends StatelessWidget {
-  const ProfileMenuWidget({
-    Key? key,
-     required this.title,
-      required this.icon,
-     required this.onPress,
-      this.endIcon = true,
-       this.textColor,
-  }):super(key :key);
 
+class ProfileMenuWidget extends StatelessWidget {
   final String title;
   final IconData icon;
-  final VoidCallback onPress;
-  final bool endIcon;
-  final Color? textColor;
+  final Color textColor;
+  final IconData endIcon;
+  final Function onPress;
+
+  ProfileMenuWidget({
+    required this.title,
+    required this.icon,
+    required this.textColor,
+    required this.endIcon,
+    required this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap : onPress,
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: Colors.black.withOpacity(0.1),
+    return GestureDetector(
+      onTap: () {
+        onPress();
+      },
+      child: Card(
+        color: Color.fromARGB(255, 235, 237, 240),
+        elevation: 4,
+        margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-        child:  Icon(icon,color:Colors.black),
-        ),
-        title: Text(title,style: Theme.of(context).textTheme.bodyText1?.apply(color: textColor)),
-        
-        trailing: endIcon? Container(
-          width: 40,
-          height: 30,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.white.withOpacity(0.1),
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Icon(icon, color: textColor),
+              SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(color: textColor, fontSize: 16),
+                ),
+              ),
+              Icon(endIcon, color: textColor),
+            ],
           ),
-          child: const Icon(CupertinoIcons.arrowtriangle_right,color:Colors.grey),
-        ):null
-      );
+        ),
+      ),
+    );
   }
 }

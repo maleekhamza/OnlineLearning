@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Auth extends StatelessWidget {
-  const Auth({super.key});
+  const Auth({super.key, required Type auth});
 
   @override
   Widget build(BuildContext context) {
